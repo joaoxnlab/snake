@@ -76,10 +76,10 @@ class Cobra extends Entidade {
             this.x + this.largura > comida.x &&
             this.y < comida.y + comida.altura &&
             this.y + this.altura > comida.y) {
-            this.#houveColisao(comida);
+            this.houveColisao(comida);
         }
     }
-    #houveColisao(comida) {
+    houveColisao(comida) {
         pontuacao++;
         comida.x = Math.random() * (canvas.width - comida.largura);
         comida.y = Math.random() * (canvas.height - comida.altura);
