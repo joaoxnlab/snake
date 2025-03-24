@@ -11,7 +11,17 @@ const teclasPressionadas: {[key: string]: boolean} = {
     KeyA: false
 };
 
+const opostoMap: {[key: string]: string} = {
+    KeyW: 'KeyS',
+    KeyS: 'KeyW',
+    KeyD: 'KeyA',
+    KeyA: 'KeyD'
+}
+
+
 document.addEventListener('keydown', (e) => {
+    if (teclasPressionadas[opostoMap[e.code]]) return;
+
     for (let tecla in teclasPressionadas) {
         if (teclasPressionadas.hasOwnProperty(e.code)) {
             teclasPressionadas[tecla] = false;
@@ -55,23 +65,18 @@ class Cobra extends Entidade {
     }
 
     atualizar() {
-        // Move cada segmento para a posição do segmento à frente
-        for (let i = this.segmentos.length - 1; i > 0; i--) {
+        for (let i = this.segmentos.length - 1; i > 0; i--)
             this.segmentos[i] = { ...this.segmentos[i - 1] };
-        }
 
-        // Atualiza a posição da cabeça da cobra
-        if (teclasPressionadas.KeyW) {
+        if (teclasPressionadas.KeyW)
             this.y -= this.velocidade;
-        } else if (teclasPressionadas.KeyS) {
+        else if (teclasPressionadas.KeyS)
             this.y += this.velocidade;
-        } else if (teclasPressionadas.KeyA) {
+        else if (teclasPressionadas.KeyA)
             this.x -= this.velocidade;
-        } else if (teclasPressionadas.KeyD) {
+        else if (teclasPressionadas.KeyD)
             this.x += this.velocidade;
-        }
 
-        // Atualiza a posição do primeiro segmento para a nova posição da cabeça
         this.segmentos[0] = { x: this.x, y: this.y };
     }
 
@@ -81,7 +86,7 @@ class Cobra extends Entidade {
             ctx.fillRect(segmento.x, segmento.y, this.largura, this.altura);
         }
     }
-    verificarColisao(comida: Entidade) {
+    verificarSeComeu(comida: Entidade) {
         if (
             this.x < comida.x + comida.largura &&
             this.x + this.largura > comida.x &&
@@ -97,9 +102,16 @@ class Cobra extends Entidade {
         comida.x = Math.random() * (canvas.width - comida.largura);
         comida.y = Math.random() * (canvas.height - comida.altura);
 
-        // Adiciona um novo segmento no final da cobra
         const ultimoSegmento = this.segmentos[this.segmentos.length - 1];
-        this.segmentos.push({ x: ultimoSegmento.x, y: ultimoSegmento.y });
+        this.segmentos.push({ x: ultimoSegmento.x-1, y: ultimoSegmento.y-1});
+    }
+
+    colidiuEmSiMesmo(): boolean {
+        for (let i = 1; i < this.segmentos.length; i++)
+            if (this.x === this.segmentos[i].x && this.y === this.segmentos[i].y)
+                return true;
+        
+        return false;
     }
 
     dentroDoCanvas(): boolean {
@@ -138,9 +150,9 @@ function loop() {
     cobra.desenhar();
     cobra.atualizar();
     comida.desenhar();
-    cobra.verificarColisao(comida);
+    cobra.verificarSeComeu(comida);
 
-    if (!cobra.dentroDoCanvas()) {
+    if (!cobra.dentroDoCanvas() || cobra.colidiuEmSiMesmo()) {
         gameOver();
         return;
     }
