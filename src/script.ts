@@ -2,7 +2,7 @@ const canvas = document.getElementById('jogoCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
 
 let pontuacao = 0;
-let recorde = Number(localStorage.getItem('recorde')) ?? 0;
+
 
 const teclasPressionadas: {[key: string]: boolean} = {
     KeyW: false,
@@ -97,18 +97,14 @@ const comida = new Comida();
 
 function gameOver() {
     ctx.fillStyle = 'white';
-    ctx.font = 'bold 30px Arial';
-    ctx.fillText(`Fim de jogo! Pontuação final: ${pontuacao}`, 10, 40);
-    if (pontuacao > recorde) {
-        localStorage.setItem('recorde', pontuacao.toString());
-    }
+    ctx.font = 'bold 20px Arial';
+    ctx.fillText(`Fim de jogo! Pontuação final: ${pontuacao}`, 10, 30);
 }
 
 function escreverPontuacao() {
     ctx.fillStyle = 'white';
     ctx.font = 'bold 20px Arial';
     ctx.fillText(`Pontuação: ${pontuacao}`, 10, 30);
-    ctx.fillText(`Recorde: ${recorde}`, 10, 60);
 }
 
 function loop() {
