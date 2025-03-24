@@ -1,6 +1,8 @@
 const canvas = document.getElementById('jogoCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
 
+let pontuacao = 0;
+
 
 const teclasPressionadas: {[key: string]: boolean} = {
     KeyW: false,
@@ -70,8 +72,9 @@ class Cobra extends Entidade {
         }
     }
     #houveColisao(comida: Entidade) {
-        comida.x = Math.random() * canvas.width - 10;
-        comida.y = Math.random() * canvas.height - 10;
+        pontuacao++;
+        comida.x = Math.random() * canvas.width - comida.largura;
+        comida.y = Math.random() * canvas.height - comida.altura;
     }
 
     dentroDoCanvas(): boolean {
@@ -84,7 +87,7 @@ class Cobra extends Entidade {
 class Comida extends Entidade {
     cor = '#f33';
     constructor() {
-        super(Math.random() * canvas.width - 10, canvas.height - 10, 20, 20);
+        super(Math.random() * canvas.width - 20, Math.random() * canvas.height - 20, 20, 20);
     }
 }
 
@@ -94,10 +97,15 @@ const comida = new Comida();
 
 function gameOver() {
     ctx.fillStyle = 'white';
-    ctx.font = 'bold 30px Arial';
-    ctx.fillText(`Fim de jogo!`, 10, 40);
+    ctx.font = 'bold 20px Arial';
+    ctx.fillText(`Fim de jogo! Pontuação final: ${pontuacao}`, 10, 30);
 }
 
+function escreverPontuacao() {
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 20px Arial';
+    ctx.fillText(`Pontuação: ${pontuacao}`, 10, 30);
+}
 
 function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -110,7 +118,8 @@ function loop() {
         gameOver();
         return;
     }
-    
+    escreverPontuacao();
+
     requestAnimationFrame(loop);
 }
 loop();
