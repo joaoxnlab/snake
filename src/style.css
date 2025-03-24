@@ -14,4 +14,7 @@ body {
 
 #jogoCanvas {
     border: 2px solid #000;
+    background: url(assets/background.jpg);
+    background-size: cover;
+    border-radius: 5px;
 }

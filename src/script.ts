@@ -26,21 +26,25 @@ class Entidade {
     y: number;
     largura: number;
     altura: number;
+    cor?: string;
 
-    constructor(x: number, y: number, largura: number, altura: number) {
+    constructor(x: number, y: number, largura: number, altura: number, cor?: string) {
         this.x = x;
         this.y = y;
         this.largura = largura;
         this.altura = altura;
+        this.cor = cor;
     }
     desenhar() {
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = this.cor ?? 'black';
         ctx.fillRect(this.x, this.y, this.largura, this.altura);
     }
 }
 
 
 class Cobra extends Entidade {
+    cor = '#ffa';
+
     constructor(x: number, y: number, largura: number, altura: number) {
         super(x, y, largura, altura);
     }
@@ -71,6 +75,7 @@ class Cobra extends Entidade {
     }
 }
 class Comida extends Entidade {
+    cor = '#f33';
     constructor() {
         super(Math.random() * canvas.width - 10, canvas.height - 10, 20, 20);
     }
