@@ -66,6 +66,12 @@ class Cobra extends Entidade {
         comida.x = Math.random() * canvas.width - 10;
         comida.y = Math.random() * canvas.height - 10;
     }
+    dentroDoCanvas() {
+        return this.x >= 0 &&
+            this.x + this.largura <= canvas.width &&
+            this.y >= 0 &&
+            this.y + this.altura <= canvas.height;
+    }
 }
 class Comida extends Entidade {
     cor = '#f33';
@@ -75,12 +81,21 @@ class Comida extends Entidade {
 }
 const cobra = new Cobra(100, 200, 20, 20);
 const comida = new Comida();
+function gameOver() {
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 30px Arial';
+    ctx.fillText(`Fim de jogo!`, 10, 40);
+}
 function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     cobra.desenhar();
     cobra.atualizar();
     comida.desenhar();
     cobra.verificarColisao(comida);
+    if (!cobra.dentroDoCanvas()) {
+        gameOver();
+        return;
+    }
     requestAnimationFrame(loop);
 }
 loop();
